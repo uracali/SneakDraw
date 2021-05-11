@@ -1,5 +1,10 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from datetime import datetime
+
 import time
 
 class Nike:
@@ -9,14 +14,55 @@ class Nike:
         self.password = password
         self.options = webdriver.ChromeOptions() 
         self.options.add_argument('--disable-blink-features=AutomationControlled')
+        self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome(options=self.options, executable_path=r'./chromedriver')
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         self.driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
         
 
     def findDraw(self):
-        self.driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul').children
-        self.driver.find_elements_by_class_name('launch-list-item item-imgwrap pb2-sm va-sm-t ncss-col-sm-12 ncss-col-md-6 ncss-col-lg-4 pb4-md prl0-sm prl2-md ncss-col-sm-6 ncss-col-lg-3 pb4-md prl2-md pl0-md pr1-md d-sm-h d-md-ib  upcomingItem complete')
+        self.driver.implicitly_wait(3)
+        # WebDriverWait함수를 적용 불가 ! -> time.sleep으로 대체
+        time.sleep(2)
+
+        targets =self.driver.find_elements_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h3')
+        targets_name = self.driver.find_elements_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h6')
+        targets_date = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]")
+        targets_href = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/a")
+
+        #오늘의 날짜
+        today = datetime.today().strftime("%Y/%m/%d")
+        # 오늘 응모에 참여해야하는 item url
+        href_list = []
+        
+        for i in range(len(targets)):
+            try:
+                date = targets_date[i].get_attribute('data-active-date')[:10]
+                draw = targets[i].text
+                if date == today:
+                
+                    if '응모' in draw:
+                        href_list.append(targets_href[i].get_attribute('href'))
+                else:
+                    break
+                    
+                
+            except Exception as ex:
+                print("Error Detected",ex)
+                self.driver.quit()
+
+        #url로 접속해 응모 클릭
+        for i in range(len(href_list)):
+            self.driver.get(href_list[i])
+            wait = WebDriverWait(self.driver,10)
+            try:
+                element = wait.until(EC.element_to_be_clickable((By.XPATH,"/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]")))
+                self.driver.find_element_by_xpath("/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]").click()
+                print("응모 성공")
+            
+            except Exception as ex:
+                print("Error Detected")
+                self.driver.quit()
         
 
     def login(self):
@@ -64,6 +110,16 @@ class Nike:
     
     def quitDriver(self):
         self.driver.quit()
+
+
+if __name__ == '__main__':
+    id = ""
+    password= ""
+    test = Nike(id,password)
+    test.login()
+    test.findDraw()
+    test.quitDriver()
+    
 
 
 
