@@ -19,8 +19,8 @@ class Nike:
         
 
     def findDraw(self):
-       self.driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul').children
-       self.driver.find_elements_by_class_name('launch-list-item item-imgwrap pb2-sm va-sm-t ncss-col-sm-12 ncss-col-md-6 ncss-col-lg-4 pb4-md prl0-sm prl2-md ncss-col-sm-6 ncss-col-lg-3 pb4-md prl2-md pl0-md pr1-md d-sm-h d-md-ib  upcomingItem complete')
+        self.driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul').children
+        self.driver.find_elements_by_class_name('launch-list-item item-imgwrap pb2-sm va-sm-t ncss-col-sm-12 ncss-col-md-6 ncss-col-lg-4 pb4-md prl0-sm prl2-md ncss-col-sm-6 ncss-col-lg-3 pb4-md prl2-md pl0-md pr1-md d-sm-h d-md-ib  upcomingItem complete')
 
 
     def login(self):
