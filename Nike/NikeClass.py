@@ -1,5 +1,9 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 import time
 
 class Nike:
@@ -15,9 +19,9 @@ class Nike:
         
 
     def findDraw(self):
-        self.driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul').children
-        self.driver.find_elements_by_class_name('launch-list-item item-imgwrap pb2-sm va-sm-t ncss-col-sm-12 ncss-col-md-6 ncss-col-lg-4 pb4-md prl0-sm prl2-md ncss-col-sm-6 ncss-col-lg-3 pb4-md prl2-md pl0-md pr1-md d-sm-h d-md-ib  upcomingItem complete')
-        
+       self.driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul').children
+       self.driver.find_elements_by_class_name('launch-list-item item-imgwrap pb2-sm va-sm-t ncss-col-sm-12 ncss-col-md-6 ncss-col-lg-4 pb4-md prl0-sm prl2-md ncss-col-sm-6 ncss-col-lg-3 pb4-md prl2-md pl0-md pr1-md d-sm-h d-md-ib  upcomingItem complete')
+
 
     def login(self):
         self.driver.maximize_window()
@@ -30,6 +34,9 @@ class Nike:
         self.driver.find_element_by_id('j_username').send_keys(self.id)
         self.driver.find_element_by_id('j_password').send_keys(self.password)
         self.driver.find_element_by_xpath('//*[@id="common-modal"]/div/div/div/div/div[2]/div/div[2]/div/button').click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="jq_m_right_click"]/div/ul/li[1]/div/div/label/span'))
+        )
 
 
     def findSizeInput(self):
