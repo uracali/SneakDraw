@@ -9,7 +9,6 @@ import time
 
 class Nike:
     def __init__(self, id, password):
-        print("here we are")
         self.id = id
         self.password = password
         self.options = webdriver.ChromeOptions() 
@@ -76,6 +75,9 @@ class Nike:
         self.driver.find_element_by_id('j_username').send_keys(self.id)
         self.driver.find_element_by_id('j_password').send_keys(self.password)
         self.driver.find_element_by_xpath('//*[@id="common-modal"]/div/div/div/div/div[2]/div/div[2]/div/button').click()
+        WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, '//*[@id="jq_m_right_click"]/div/ul/li[1]/div/div/label/span'))
+        )
 
 
     def findSizeInput(self):
