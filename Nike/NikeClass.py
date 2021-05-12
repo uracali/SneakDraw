@@ -4,7 +4,6 @@ import time
 
 class Nike:
     def __init__(self, id, password):
-        print("here we are")
         self.id = id
         self.password = password
         self.options = webdriver.ChromeOptions() 
