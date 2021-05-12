@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
-
+from pytz import timezone
 import time
 
 class Nike:
@@ -21,47 +21,36 @@ class Nike:
 
     def findDraw(self):
         self.driver.implicitly_wait(3)
-        # WebDriverWait함수를 적용 불가 ! -> time.sleep으로 대체
-        time.sleep(2)
 
         targets =self.driver.find_elements_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h3')
         targets_name = self.driver.find_elements_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h6')
         targets_date = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]")
         targets_href = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/a")
 
-        #오늘의 날짜
-        today = datetime.today().strftime("%Y/%m/%d")
-        # 오늘 응모에 참여해야하는 item url
+        today = datetime.now(timezone('Asia/Seoul')).strftime("%Y/%m/%d")
         href_list = []
         
         for i in range(len(targets)):
-            try:
-                date = targets_date[i].get_attribute('data-active-date')[:10]
-                draw = targets[i].text
-                if date == today:
-                
-                    if '응모' in draw:
-                        href_list.append(targets_href[i].get_attribute('href'))
-                else:
-                    break
+            
+            date = targets_date[i].get_attribute('data-active-date')[:10]
+            draw = targets[i].text
+            if date == today:
+            
+                if '응모' in draw:
+                    href_list.append(targets_href[i].get_attribute('href'))
+            else:
+                break
                     
-                
-            except Exception as ex:
-                print("Error Detected",ex)
-                self.driver.quit()
-
-        #url로 접속해 응모 클릭
+    
         for i in range(len(href_list)):
             self.driver.get(href_list[i])
-            wait = WebDriverWait(self.driver,10)
-            try:
-                element = wait.until(EC.element_to_be_clickable((By.XPATH,"/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]")))
-                self.driver.find_element_by_xpath("/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]").click()
-                print("응모 성공")
+            self.driver.implicitly_wait(3)
+            self.driver.find_element_by_xpath('//*[@id="checkTerms"]/label/i').click()
+            self.driver.execute_script('document.getElementsByClassName("currentOpt")[0].innerText="270"')
+            self.driver.find_element_by_xpath("/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]").click()
+            self.driver.find_element_by_xpath(' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
+            print("응모 성공")
             
-            except Exception as ex:
-                print("Error Detected")
-                self.driver.quit()
         
 
     def login(self):
@@ -114,13 +103,7 @@ class Nike:
         self.driver.quit()
 
 
-if __name__ == '__main__':
-    id = ""
-    password= ""
-    test = Nike(id,password)
-    test.login()
-    test.findDraw()
-    test.quitDriver()
+
     
 
 
