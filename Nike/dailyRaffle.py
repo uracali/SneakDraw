@@ -1,3 +1,4 @@
+from logging import exception
 from .NikeClass import Nike
 import time
 
@@ -9,11 +10,18 @@ def dailyRaffle(data):
     try:
         nike = Nike(id,password)
         nike.login()
-        # time.sleep(2000)
+        raffleList = nike.findDraw()
+        if len(raffleList):
+            result = nike.raffle(raffleList)
+        else:
+            result = "NO_RAFFLE_ITEMS"
+
+    except Exception as ex: 
+        result = "INTERNAL_ERROR"
     finally:
         nike.quitDriver()
         
-    return {"result" : "SUCCESS"}
+    return {"result" : result}
 
 
 
