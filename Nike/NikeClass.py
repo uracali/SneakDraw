@@ -3,7 +3,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
+from datetime import datetime
+from pytz import timezone
 import time
 
 class Nike:
@@ -12,15 +13,45 @@ class Nike:
         self.password = password
         self.options = webdriver.ChromeOptions() 
         self.options.add_argument('--disable-blink-features=AutomationControlled')
+        self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome(options=self.options, executable_path=r'./chromedriver')
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         self.driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
         
 
     def findDraw(self):
-        self.driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul').children
-        self.driver.find_elements_by_class_name('launch-list-item item-imgwrap pb2-sm va-sm-t ncss-col-sm-12 ncss-col-md-6 ncss-col-lg-4 pb4-md prl0-sm prl2-md ncss-col-sm-6 ncss-col-lg-3 pb4-md prl2-md pl0-md pr1-md d-sm-h d-md-ib  upcomingItem complete')
+        self.driver.implicitly_wait(3)
 
+        targets =self.driver.find_elements_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h3')
+        targets_name = self.driver.find_elements_by_xpath('/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h6')
+        targets_date = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]")
+        targets_href = self.driver.find_elements_by_xpath("/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/a")
+
+        today = datetime.now(timezone('Asia/Seoul')).strftime("%Y/%m/%d")
+        href_list = []
+        
+        for i in range(len(targets)):
+            
+            date = targets_date[i].get_attribute('data-active-date')[:10]
+            draw = targets[i].text
+            if date == today:
+            
+                if '응모' in draw:
+                    href_list.append(targets_href[i].get_attribute('href'))
+            else:
+                break
+                    
+    
+        for i in range(len(href_list)):
+            self.driver.get(href_list[i])
+            self.driver.implicitly_wait(3)
+            self.driver.find_element_by_xpath('//*[@id="checkTerms"]/label/i').click()
+            self.driver.execute_script('document.getElementsByClassName("currentOpt")[0].innerText="270"')
+            self.driver.find_element_by_xpath("/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]").click()
+            self.driver.find_element_by_xpath(' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
+            print("응모 성공")
+            
+        
 
     def login(self):
         self.driver.maximize_window()
@@ -70,6 +101,10 @@ class Nike:
     
     def quitDriver(self):
         self.driver.quit()
+
+
+
+    
 
 
 
