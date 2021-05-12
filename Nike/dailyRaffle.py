@@ -1,4 +1,3 @@
-from logging import exception
 from .NikeClass import Nike
 import time
 
@@ -15,7 +14,6 @@ def dailyRaffle(data):
             result = nike.raffle(raffleList)
         else:
             result = "NO_RAFFLE_ITEMS"
-
     except Exception as ex: 
         result = "INTERNAL_ERROR"
     finally:
