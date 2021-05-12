@@ -31,26 +31,17 @@ class Nike:
         href_list = []
         
         for i in range(len(targets)):
-            
             date = targets_date[i].get_attribute('data-active-date')[:10]
             draw = targets[i].text
             if date == today:
-            
                 if '응모' in draw:
                     href_list.append(targets_href[i].get_attribute('href'))
             else:
                 break
+
+        return href_list
                     
     
-        for i in range(len(href_list)):
-            self.driver.get(href_list[i])
-            self.driver.implicitly_wait(3)
-            self.driver.find_element_by_xpath('//*[@id="checkTerms"]/label/i').click()
-            self.driver.execute_script('document.getElementsByClassName("currentOpt")[0].innerText="270"')
-            self.driver.find_element_by_xpath("/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]").click()
-            self.driver.find_element_by_xpath(' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
-            print("응모 성공")
-            
         
 
     def login(self):
@@ -69,35 +60,17 @@ class Nike:
         )
 
 
-    def findSizeInput(self):
-        time.sleep(2)
-        # 사이즈 찾기
-        self.driver.find_element_by_xpath('/html/body/section/section/section/article/article[2]/div/div[4]/div/div[2]/form/div[1]/div[2]/div[1]/div/span[8]').click()
 
-        time.sleep(0.5)
-        # 바로 구매 버튼 클릭
-        self.driver.find_element_by_xpath('//*[@id="btn-buy"]').click()
-
-
-    def order(self):
-        time.sleep(0.5)
-        self.driver.find_element_by_xpath('// *[ @ id = "btn-next"]').click()
-        time.sleep(0.5)
-        self.driver.find_element_by_xpath('//*[@id="payment-review"]/div[1]/ul/li[2]/form/div/span').click()
-        time.sleep(0.5)
-        self.driver.find_element_by_xpath('// *[ @ id = "payment-review"] / div[1] / ul / li[1] / div / div[1] / h6').click()
-        time.sleep(0.5)
-        self.driver.find_element_by_xpath('//*[@id="payment-review"]/div[1]/ul/li[2]/form/div/span/label/span').click()
-        time.sleep(3)
-        self.driver.implicitly_wait(3)
-        self.driver.find_element_by_xpath('//*[@id="complete_checkout"]').click()
-
-
-        # 결제
-        iframe = self.driver.find_element_by_xpath("/html/body/div[13]/iframe[2]")
-        self.driver.switch_to.frame(iframe)
-        self.driver.find_element_by_xpath('/html/body/div[4]/div/div/div[2]/ul/li[2]/a').click()
-        self.driver.find_element_by_id('userPhone').send_keys('01056741111')
+    def raffle(self, raffleList):
+        for i in range(len(raffleList)):
+            self.driver.get(raffleList[i])
+            self.driver.implicitly_wait(3)
+            self.driver.find_element_by_xpath('//*[@id="checkTerms"]/label/i').click()
+            self.driver.execute_script('document.getElementsByClassName("currentOpt")[0].innerText="270"')
+            self.driver.find_element_by_xpath("/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]").click()
+            self.driver.find_element_by_xpath(' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
+            return "RAFFLE_SUCCESS"
+            
     
     def quitDriver(self):
         self.driver.quit()
