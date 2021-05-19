@@ -12,9 +12,12 @@ class Nike:
         self.id = id
         self.password = password
         self.options = webdriver.ChromeOptions() 
+        self.options.add_argument('--headless')
+        self.options.add_argument('--window-size=1920x1080')
+        self.options.add_argument('--no-sandbox')
         self.options.add_argument('--disable-blink-features=AutomationControlled')
-        self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
-        self.driver = webdriver.Chrome(options=self.options, executable_path=r'./chromedriver')
+        # self.options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        self.driver = webdriver.Chrome(options=self.options, executable_path='./opt/bin/chromedriver')
         self.driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
         self.driver.execute_cdp_cmd('Network.setUserAgentOverride', {"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
         

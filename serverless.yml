@@ -11,23 +11,32 @@
 #
 # Happy Coding!
 
-service: nike_Raffle_Automation
+service: nike-Raffle-Automation
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-# frameworkVersion: "=X.X.X"
+frameworkVersion: "2.22.0"
 
 provider:
   name: aws
   runtime: python3.8
+  timeout: 180
 
 # you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  stage: dev
+  region: ap-northeast-2
 
+plugins:
+  - serverless-python-requirements
+
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+  accountId: 100920788057
 # you can add statements to the Lambda function's IAM Role here
 #  iamRoleStatements:
 #    - Effect: "Allow"
@@ -60,6 +69,8 @@ provider:
 functions:
   handler:
     handler: raffleHandler.main
+    Layers:
+      - arn:aws:lambda:ap-northeast-2:100920788057:layer:WEBDRIVER_LAYER:2
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
