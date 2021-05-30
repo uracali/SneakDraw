@@ -4,6 +4,7 @@ from .NikeClass import Nike
 def dailyRaffle(data):
     id = data.get("id")
     password = data.get("password")
+    print(id)
     nike = None
     try:
         nike = Nike(id, password)
