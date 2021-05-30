@@ -4,7 +4,7 @@ import time
 def dailyRaffle(data):
     id = data.get("id")
     password = data.get("password")
-    print(id, password)
+    print(id)
     nike = None
     try:
         nike = Nike(id,password)
