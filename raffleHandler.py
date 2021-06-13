@@ -7,7 +7,7 @@ class RaffleSwitcher:
         self.method_name = 'raffle_' + str(field)
 
     def getFunction(self, data={}):
-        print("method_name : ", self.method_name, ", ID : ", data.id)
+        print("method_name : ", self.method_name)
         return getattr(self, self.method_name, lambda: "Invalid Field")
 
     def raffle_nike(self, data):
