@@ -60,7 +60,7 @@ class Worksout:
                 '//*[@id="raffleForm"]/div[2]/div[2]/ul/li[*]/span')
             for size in size_list:
                 print(size.text)
-                if size.text == 'XL' or '270':
+                if size.text == 'XL' or size.text == '270':
                     size.click()
                     self.driver.find_element_by_xpath(
                         '//*[@id="raffleForm"]/div[3]/button').click()
