@@ -1,5 +1,5 @@
 from .NikeClass import Nike
-import time
+
 
 def dailyRaffle(data):
     id = data.get("id")
@@ -7,19 +7,19 @@ def dailyRaffle(data):
     print(id, password)
     nike = None
     try:
-        nike = Nike(id,password)
+        nike = Nike(id, password)
         nike.login()
         raffleList = nike.findDraw()
+        print("raffleList = ", raffleList)
         if len(raffleList):
             result = nike.raffle(raffleList)
         else:
             result = "NO_RAFFLE_ITEMS"
-    except Exception as ex: 
+    except Exception as ex:
+        print("error", ex)
         result = "INTERNAL_ERROR"
     finally:
+        print("quit driver")
         nike.quitDriver()
-        
-    return {"result" : result}
 
-
-
+    return {"result": result}
