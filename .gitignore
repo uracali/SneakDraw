@@ -2,6 +2,11 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,serverless,node,virtualenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,serverless,node,virtualenv
 
+
+#mock file
+mocks/
+
+
 ### Node ###
 # Logs
 logs
