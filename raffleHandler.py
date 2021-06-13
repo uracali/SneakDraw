@@ -1,4 +1,5 @@
-from Nike.dailyRaffle import dailyRaffle
+from Nike.dailyRaffle import dailyRaffle as nikeRaffle
+from Worksout.dailyRaffle import dailyRaffle as worksOutRaffle
 
 
 class RaffleSwitcher:
@@ -11,7 +12,10 @@ class RaffleSwitcher:
         return getattr(self, self.method_name, lambda: "Invalid Field")
 
     def raffle_nike(self, data):
-        return dailyRaffle(data)
+        return nikeRaffle(data)
+
+    def raffle_worksOut(self, data):
+        return worksOutRaffle(data)
 
 
 def main(event, context):

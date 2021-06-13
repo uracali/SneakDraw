@@ -5,7 +5,6 @@ def dailyRaffle(data):
     id = data.get("id")
     password = data.get("password")
     print(id)
-    nike = None
     try:
         nike = Nike(id, password)
         nike.login()
@@ -19,7 +18,6 @@ def dailyRaffle(data):
         print("error", ex)
         result = "INTERNAL_ERROR"
     finally:
-        print("quit driver")
         nike.quitDriver()
 
     return {"result": result}
