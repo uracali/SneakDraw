@@ -6,6 +6,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from pytz import timezone
+import time
+import os
+from webdriver_manager.chrome import ChromeDriverManager
+from libs.chrome_setting import setWebDriver
 
 
 class Nike:
