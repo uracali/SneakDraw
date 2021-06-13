@@ -1,15 +1,9 @@
-from selenium.common.exceptions import NoSuchElementException
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from pytz import timezone
-import time
-import os
-from webdriver_manager.chrome import ChromeDriverManager
-from libs.chrome_setting import setWebDriver
+from libs.chrome_setting import setWebDriver, quitDriver
 
 
 class Nike:
@@ -19,14 +13,14 @@ class Nike:
         self.password = password
 
     def findDraw(self):
-        self.driver.implicitly_wait(3)
-
         targets = self.driver.find_elements_by_xpath(
             '/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h3')
-        targets_name = self.driver.find_elements_by_xpath(
-            '/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/div/div/div/div[1]/h6')
+        targets_name = self.driver.find_elements_by_class_name(
+            'available-date-component')
         targets_date = self.driver.find_elements_by_xpath(
             "/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]")
+        targets_time = self.driver.find_elements_by_xpath(
+            '/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[9]/div[1]/div/div/div/div/div[1]/h3')
         targets_href = self.driver.find_elements_by_xpath(
             "/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/a")
 
@@ -35,9 +29,12 @@ class Nike:
 
         for i in range(len(targets)):
             date = targets_date[i].get_attribute('data-active-date')[:10]
-            draw = targets[i].text
+            print(date)
+            draw = targets_name[i].text
+            print(draw)
+
             if date == today:
-                if '응모' in draw:
+                if 'THE DRAW' in draw:
                     href_list.append(targets_href[i].get_attribute('href'))
             else:
                 break
@@ -47,7 +44,6 @@ class Nike:
     def login(self):
         try:
             self.driver.maximize_window()
-            self.driver.implicitly_wait(3)
             self.driver.get(
                 'https://www.nike.com/kr/launch/?type=upcoming&activeDate=date-filter:AFTER_DATE'
             )
@@ -63,21 +59,31 @@ class Nike:
                     (By.XPATH, '//*[@id="jq_m_right_click"]/div/ul/li[1]/div/div/label/span'))
             )
         except Exception as ex:
-            print("error", ex)
+            print("Login Failed, ErrorCode = ", ex)
 
     def raffle(self, raffleList):
         for i in range(len(raffleList)):
             self.driver.get(raffleList[i])
-            self.driver.implicitly_wait(3)
             self.driver.find_element_by_xpath(
                 '//*[@id="checkTerms"]/label/i').click()
-            self.driver.execute_script(
-                'document.getElementsByClassName("currentOpt")[0].innerText="270"')
+            self.driver.find_element_by_class_name(
+                'select-head'
+            ).click()
+            self.driver.find_element_by_css_selector(
+                "li.list > a[data-value='46']"
+            ).click()
             self.driver.find_element_by_xpath(
-                "/html/body/div[1]/div/div[1]/div[2]/div[1]/section/div[2]/aside/div[2]/div[2]").click()
+                '//*[@id="btn-buy"]'
+            ).click()
+            WebDriverWait(self.criver, 10).until(
+                EC.presence_of_element_located(
+                    (By.XPATH,
+                     ' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
+                )
+            )
             self.driver.find_element_by_xpath(
-                ' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
+                ' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button').click()
             return "RAFFLE_SUCCESS"
 
     def quitDriver(self):
-        self.driver.quit()
+        quitDriver(self.driver)

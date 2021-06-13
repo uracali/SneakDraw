@@ -1,4 +1,4 @@
-from .NikeClass import Nike
+from .WokrsoutClass import Worksout
 
 
 def dailyRaffle(data):
@@ -6,18 +6,17 @@ def dailyRaffle(data):
     password = data.get("password")
     print(id)
     try:
-        nike = Nike(id, password)
-        nike.login()
-        raffleList = nike.findDraw()
-        print("raffleList = ", raffleList)
-        if len(raffleList):
-            result = nike.raffle(raffleList)
+        worksout = Worksout(id, password)
+        worksout.login()
+        worksout.findDraw()
+        if len(worksout.href_list):
+            result = worksout.raffle()
         else:
             result = "NO_RAFFLE_ITEMS"
     except Exception as ex:
         print("error", ex)
         result = "INTERNAL_ERROR"
     finally:
-        nike.quitDriver()
+        worksout.quitDriver()
 
     return {"result": result}
