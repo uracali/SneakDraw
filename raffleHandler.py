@@ -1,5 +1,10 @@
 from Nike.dailyRaffle import dailyRaffle as nikeRaffle
 from Worksout.dailyRaffle import dailyRaffle as worksOutRaffle
+import telegram
+from apscheduler.schedulers.blocking import BlockingScheduler
+import json
+
+sched = BlockingScheduler()
 
 
 class RaffleSwitcher:
@@ -18,7 +23,7 @@ class RaffleSwitcher:
         return worksOutRaffle(data)
 
 
-def main(event, context):
+def main(event):
     try:
         fieldName = event.get("field")
         data = event.get("arguments")
@@ -28,3 +33,22 @@ def main(event, context):
     except Exception as ex:
         print('에러가 발생 했습니다', ex)
         return False
+
+def run(userList, chatId):
+    for user in userList:
+        arguments = user
+        nikeEvent = {"field": "nike", "arguments": arguments}
+        result = main(nikeEvent)
+        message = user["id"]+" "+str(result)
+        bot.sendMessage(chatId, text= message)
+
+
+if __name__ == "__main__":
+    with open('./.env.json') as f:
+        json_data = json.load(f)
+        token = json_data['token']
+        chatId = json_data['chatId']
+    userList = json_data['user']
+    bot = telegram.Bot(token=token)
+    sched.add_job(lambda: run(userList, chatId),'cron',hour='10,11',minute='*/10',id='test')
+    sched.start()
