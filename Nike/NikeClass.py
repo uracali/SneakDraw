@@ -26,11 +26,10 @@ class Nike:
 
         today = datetime.now(timezone('Asia/Seoul')).strftime("%Y/%m/%d")
         href_list = []
-
         for i in range(len(targets)):
             date = targets_date[i].get_attribute('data-active-date')[:10]
             print(date)
-            draw = targets_name[i].text
+            draw = targets_name[i].get_attribute('textContent')
             print(draw)
 
             if date == today:
@@ -70,7 +69,7 @@ class Nike:
                 'select-head'
             ).click()
             self.driver.find_element_by_css_selector(
-                "li.list > a[data-value='46']"
+                "li.list > a[data-value='270']"
             ).click()
             self.driver.find_element_by_xpath(
                 '//*[@id="btn-buy"]'
