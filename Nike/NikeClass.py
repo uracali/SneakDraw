@@ -48,41 +48,58 @@ class Nike:
             )
             self.driver.find_element_by_xpath(
                 '//*[@id="jq_m_right_click"]/div/ul/li[2]/a').click()
+            print(1)
+            WebDriverWait(self.driver, 10).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, '//*[@id="j_username"]')
+                )
+            )
             self.driver.find_element_by_id('j_username').send_keys(self.id)
             self.driver.find_element_by_id(
                 'j_password').send_keys(self.password)
+            print(2)
             self.driver.find_element_by_xpath(
                 '//*[@id="common-modal"]/div/div/div/div/div[2]/div/div[2]/div/button').click()
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(
                     (By.XPATH, '//*[@id="jq_m_right_click"]/div/ul/li[1]/div/div/label/span'))
             )
+            print(3)
+            return True
         except Exception as ex:
             print("Login Failed, ErrorCode = ", ex)
+            return False
 
     def raffle(self, raffleList):
         for i in range(len(raffleList)):
-            self.driver.get(raffleList[i])
-            self.driver.find_element_by_xpath(
-                '//*[@id="checkTerms"]/label/i').click()
-            self.driver.find_element_by_class_name(
-                'select-head'
-            ).click()
-            self.driver.find_element_by_css_selector(
-                "li.list > a[data-value='270']"
-            ).click()
-            self.driver.find_element_by_xpath(
-                '//*[@id="btn-buy"]'
-            ).click()
-            WebDriverWait(self.criver, 10).until(
+            try:
+                self.driver.get(raffleList[i])
+                WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(
-                    (By.XPATH,
-                     ' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
+                    (By.XPATH, '//*[@id="checkTerms"]/label/i'))
                 )
-            )
-            self.driver.find_element_by_xpath(
-                ' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button').click()
-            return "RAFFLE_SUCCESS"
+                self.driver.find_element_by_xpath(
+                    '//*[@id="checkTerms"]/label/i').click()
+                self.driver.find_element_by_class_name(
+                    'select-head'
+                ).click()
+                self.driver.find_element_by_css_selector(
+                    "li.list > a[data-value='270']"
+                ).click()
+                self.driver.find_element_by_class_name(
+                    'btn-buy'
+                ).click()
+                WebDriverWait(self.driver, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH,
+                        ' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button')
+                    )
+                )
+                self.driver.find_element_by_xpath(
+                    ' //*[@id="draw-entryTrue-modal"]/div/div/div/div[3]/p/button').click()
+            except:
+                pass
+        return "RAFFLE_SUCCESS"
 
     def quitDriver(self):
         quitDriver(self.driver)

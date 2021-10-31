@@ -50,5 +50,6 @@ if __name__ == "__main__":
         chatId = json_data['chatId']
     userList = json_data['user']
     bot = telegram.Bot(token=token)
+    # run(userList, chatId)
     sched.add_job(lambda: run(userList, chatId),'cron',hour='10,11',minute='*/10',id='test')
     sched.start()

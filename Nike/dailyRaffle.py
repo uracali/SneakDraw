@@ -7,7 +7,9 @@ def dailyRaffle(data):
     print(id)
     try:
         nike = Nike(id, password)
-        nike.login()
+        login_status = nike.login()
+        if login_status == False:
+            raise NameError('login failed')
         raffleList = nike.findDraw()
         print("raffleList = ", raffleList)
         if len(raffleList):
