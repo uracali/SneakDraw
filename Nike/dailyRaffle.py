@@ -4,9 +4,10 @@ from .NikeClass import Nike
 def dailyRaffle(data):
     id = data.get("id")
     password = data.get("password")
+    size = data.get("shoes_size")
     print(id)
     try:
-        nike = Nike(id, password)
+        nike = Nike(id, password, size)
         login_status = nike.login()
         if login_status == False:
             raise NameError('login failed')
