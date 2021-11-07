@@ -4,13 +4,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from pytz import timezone
 from libs.chrome_setting import setWebDriver, quitDriver
-
+from bs4 import BeautifulSoup
 
 class Nike:
-    def __init__(self, id, password):
+    def __init__(self, id, password, size=270):
         self.driver = setWebDriver()
         self.id = id
         self.password = password
+        self.size = size
 
     def findDraw(self):
         targets = self.driver.find_elements_by_xpath(
@@ -45,6 +46,11 @@ class Nike:
             self.driver.maximize_window()
             self.driver.get(
                 'https://www.nike.com/kr/launch/?type=upcoming&activeDate=date-filter:AFTER_DATE'
+            )
+            WebDriverWait(self.driver, 5).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, '//*[@id="jq_m_right_click"]/div/ul/li[2]/a' )
+                )
             )
             self.driver.find_element_by_xpath(
                 '//*[@id="jq_m_right_click"]/div/ul/li[2]/a').click()
@@ -84,7 +90,7 @@ class Nike:
                     'select-head'
                 ).click()
                 self.driver.find_element_by_css_selector(
-                    "li.list > a[data-value='270']"
+                    f"li.list > a[data-value='{self.size}']"
                 ).click()
                 self.driver.find_element_by_class_name(
                     'btn-buy'
