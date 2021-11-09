@@ -3,6 +3,7 @@ import json
 
 from Nike.NikeClass import Nike
 from Nike.dailyRaffle import dailyRaffle
+from libs.chrome_setting import quitDriver
 
 with open ('./.env.json') as f:
     json_data = json.load(f)
@@ -20,6 +21,7 @@ class TestNikeRaffleAutomation(unittest.TestCase):
 
     def test_daily_raffle_function(self):
         dailyRaffle(DATA)
+    
     
 
 

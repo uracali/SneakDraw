@@ -3,9 +3,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 from pytz import timezone
-from libs.chrome_setting import setWebDriver, quitDriver
 from bs4 import BeautifulSoup
+import time
+import random
 
+from libs.chrome_setting import setWebDriver, quitDriver
+
+# TODO If IP keep being banned, try Tor to encrypt IP
 class Nike:
     def __init__(self, id, password, size=270):
         self.driver = setWebDriver()
@@ -24,7 +28,8 @@ class Nike:
             '/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[9]/div[1]/div/div/div/div/div[1]/h3')
         targets_href = self.driver.find_elements_by_xpath(
             "/html/body/div[1]/div/div[1]/section/div[1]/div/ul/li[*]/div[1]/div/a")
-
+        
+        time.sleep(random.randint(1,3))
         today = datetime.now(timezone('Asia/Seoul')).strftime("%Y/%m/%d")
         href_list = []
         for i in range(len(targets)):
@@ -47,6 +52,7 @@ class Nike:
             self.driver.get(
                 'https://www.nike.com/kr/launch/?type=upcoming&activeDate=date-filter:AFTER_DATE'
             )
+            time.sleep(random.randint(1,3))
             WebDriverWait(self.driver, 5).until(
                 EC.presence_of_element_located(
                     (By.XPATH, '//*[@id="jq_m_right_click"]/div/ul/li[2]/a' )
@@ -80,6 +86,7 @@ class Nike:
         for i in range(len(raffleList)):
             try:
                 self.driver.get(raffleList[i])
+                time.sleep(1)
                 WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located(
                     (By.XPATH, '//*[@id="checkTerms"]/label/i'))
