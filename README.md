@@ -39,7 +39,7 @@ Original Repository
 📌 [**Python>=3.8.0**](https://www.python.org/) is required with all 
 [requirements.txt](https://github.com/uracali/serverless_raffle_automation/blob/main/requirements.txt) 
 
-📌 [Chrome Driver](https://chromedriver.chromium.org/downloads) is required that matched your Chrome Version.
+📌 [Chrome Driver](https://chromedriver.chromium.org/downloads) that matches your Chrome Version is required .
 
 📌 [Telegram](https://core.telegram.org/) token required to recieve error messages.
 
