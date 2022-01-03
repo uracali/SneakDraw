@@ -41,7 +41,7 @@ Original Repository
 
 📌 [Chrome Driver](https://chromedriver.chromium.org/downloads) that matches your Chrome Version is required .
 
-📌 [Telegram](https://core.telegram.org/) token required to recieve error messages.
+📌 [Telegram](https://core.telegram.org/) API token is required to receive error messages.
 
 ```bash
 $ nohup python3 raffleHandler.py 1> /dev/null 2>&1 &
